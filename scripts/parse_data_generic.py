@@ -69,8 +69,9 @@ def main(json_loc: Path, train_file: Path, dev_file: Path, test_file: Path):
                 if not entities:
                     msg.warn("Could not parse any entities from the JSON file.")
             
-                # filtered = filter_spans(entities)
-                doc.ents = entities
+                filtered = filter_spans(entities)
+                # doc.ents = entities
+                doc.ents = filtered
 
                 # Parse the relations
                 rels = {}

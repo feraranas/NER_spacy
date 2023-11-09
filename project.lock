@@ -1,18 +1,18 @@
 data:
   cmd: python -m weasel run data
   script:
-    - python ./scripts/parse_data_generic.py assets/golden_skill_annotations.jsonl
-      data/train.spacy data/dev.spacy data/test.spacy
+    - python ./scripts/parse_data_generic.py assets/ner_skills_ferluis.jsonl data/train.spacy
+      data/dev.spacy data/test.spacy
   deps:
-    - path: assets/golden_skill_annotations.jsonl
-      md5: bf0468eded206061512d4ebace8f1a06
+    - path: assets/ner_skills_ferluis.jsonl
+      md5: 471c7d28b8459a6345062d8b49f9ae04
   outs:
     - path: data/train.spacy
-      md5: c91a53c9701f502c3b8839b45d6056a5
+      md5: d7d467c351979afd937db0af87a66c67
     - path: data/dev.spacy
-      md5: 0716e9572fecbba1772996b5971c6e8c
+      md5: 3c40addfe488ab96645b25641be89207
     - path: data/test.spacy
-      md5: 287730a69900f5a9f7b4038af46be32f
+      md5: d8e398b3d0d1aeb6476f040538b353da
 train_cpu:
   cmd: python -m weasel run train_cpu
   script:
