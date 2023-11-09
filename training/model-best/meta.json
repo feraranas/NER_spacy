@@ -18,19 +18,10 @@
   },
   "labels": {
     "transformer": [],
-    "relation_extractor": [
-      "KNOWS",
-      "HAS"
-    ]
+    "relation_extractor": ["KNOWS", "HAS"]
   },
-  "pipeline": [
-    "transformer",
-    "relation_extractor"
-  ],
-  "components": [
-    "transformer",
-    "relation_extractor"
-  ],
+  "pipeline": ["transformer", "relation_extractor"],
+  "components": ["transformer", "relation_extractor"],
   "disabled": [],
   "performance": {
     "rel_micro_p": 0.8038277512,
