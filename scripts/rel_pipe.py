@@ -28,9 +28,7 @@ msg = Printer()
         "rel_micro_f": None,
     },
 )
-def make_relation_extractor(
-    nlp: Language, name: str, model: Model, *, threshold: float
-):
+def make_relation_extractor(nlp: Language, name: str, model: Model, *, threshold: float):
     """Construct a RelationExtractor component."""
     return RelationExtractor(nlp.vocab, model, name, threshold=threshold)
 

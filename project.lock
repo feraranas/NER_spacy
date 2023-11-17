@@ -1,5 +1,5 @@
 data:
-  cmd: python -m weasel run data
+  cmd: python -m spacy run data
   script:
     - python ./scripts/parse_data_generic.py assets/ner_skills_ferluis.jsonl data/train.spacy
       data/dev.spacy data/test.spacy
@@ -8,11 +8,13 @@ data:
       md5: 471c7d28b8459a6345062d8b49f9ae04
   outs:
     - path: data/train.spacy
-      md5: d7d467c351979afd937db0af87a66c67
+      md5: e055058abae310d04435af9702d56a0d
     - path: data/dev.spacy
-      md5: 3c40addfe488ab96645b25641be89207
+      md5: 0e2a99a618fe1996068517c0a24ca57e
     - path: data/test.spacy
-      md5: d8e398b3d0d1aeb6476f040538b353da
+      md5: f581c2209426a02f58554e97ae141a96
+  spacy_version: 3.5.3
+  spacy_git_version: '512241e12'
 train_cpu:
   cmd: python -m weasel run train_cpu
   script:
@@ -29,12 +31,12 @@ train_cpu:
 evaluate:
   cmd: python -m weasel run evaluate
   script:
-    - python ./scripts/evaluate.py training/model-best data/test.spacy False
+    - python ./scripts/evaluate.py training/model-best data/test.spacy True
   deps:
     - path: training/model-best
-      md5: bf6ee112c3dfb30a541e50b581966dc3
+      md5: 040cd59e954d3fd57add0a7221ab6257
     - path: data/test.spacy
-      md5: 287730a69900f5a9f7b4038af46be32f
+      md5: d8e398b3d0d1aeb6476f040538b353da
   outs: []
 clean:
   cmd: python -m weasel run clean

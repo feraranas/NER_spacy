@@ -10,6 +10,8 @@ vars:
   dev_file: "data/dev.spacy"
   test_file: "data/test.spacy"
   trained_model: "training/model-best"
+  version: "0.0.0"
+  ner_rel_skill_model: "ner_rel_skills_model-0.0.0"
   database: "occ_skills"
   eval_split: 0.25
   gpu_id: -1
@@ -39,6 +41,31 @@ workflows:
 # via "spacy project run [command] [path]". The help message is optional and
 # shown when executing "spacy project run [optional command] [path] --help".
 commands:
+  - name: prep
+    help: "Install the base models."
+    script:
+      - "python -m spacy download en_core_web_md"
+      - "pip install assets/${vars.ner_rel_skill_model}.tar.gz --no-deps"
+      
+  - name: assemble
+    help: "Build two versions of the combined pipelines from configs."
+    script:
+      - "python -m spacy assemble ${vars.tok2vec_config} ${vars.trained_model}"
+    deps:
+      - ${vars.tok2vec_config}
+      - ${vars.trained_model}
+    outputs:
+      - ${vars.trained_model}
+
+  - name: package
+    help: "Package the pipelines so they can be installed."
+    script: 
+      - "python -m spacy package ${vars.trained_model} packages --name ner_rel_skill_model --version ${vars.version} --force"
+    deps:
+      - ${vars.trained_model}
+    outputs_no_cache:
+      - "packages/en_ner_rel_skill_first-${vars.version}/dist/en_ner_rel_skill_first-${vars.version}.tar.gz"
+
   - name: "data"
     help: "Parse the gold-standard annotations from the Prodigy annotations."
     script:
@@ -73,7 +100,7 @@ commands:
   - name: "evaluate"
     help: "Apply the best model to new, unseen text, and measure accuracy at different thresholds."
     script:
-      - "python ./scripts/evaluate.py ${vars.trained_model} ${vars.test_file} False"
+      - "python ./scripts/evaluate.py ${vars.trained_model} ${vars.test_file} True"
     deps:
       - ${vars.trained_model}
       - ${vars.test_file}
@@ -90,3 +117,11 @@ commands:
       - "python -m prodigy train ./training --spancat ${vars.annotations} --eval-split ${vars.eval_split} --gpu-id ${vars.gpu_id}"
     outputs:
       - "training/model-best"
+  
+  - name: check
+    help: "Use the pipeline interactively using Streamlit"
+    script:
+      - "streamlit run scripts/check.py ${vars.trained_model} \"The Security Operations Manager plans and oversees monitoring and maintenance of security operations and provides direction and leadership to internal resources. He/She provides expertise on security technologies and innovative security concepts and works toward enhancing the resilience of security operations. He coordinates ongoing reviews of existing security programs, protocols and planned upgrades. He establishes escalation processes for security incidents and develops contingency plans and disaster recovery procedures. He focuses on policy implementation and control. He is familiar with cyber security standards, protocols and frameworks, and ensures the organisations compliance with the Cyber Security Act 2018. He is knowledgeable in using various cyber security monitoring and testing tools and techniques. The Security Operations Manager is diligent and watchful in monitoring security operations, systems and activities. He is also a confident leader who develops plans and solutions to address security incidents and also one who has a passion for engaging and developing others in his team.\""
+    deps:
+      - pipelines/drugs_first
+      - pipelines/drugs_second
