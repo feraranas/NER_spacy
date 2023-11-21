@@ -8,36 +8,41 @@ data:
       md5: 471c7d28b8459a6345062d8b49f9ae04
   outs:
     - path: data/train.spacy
-      md5: e055058abae310d04435af9702d56a0d
+      md5: 500ae72fd6c4b1655b7b2c75694d7fde
     - path: data/dev.spacy
-      md5: 0e2a99a618fe1996068517c0a24ca57e
+      md5: 2e9e7db2c742460dcf77ada99188c76e
     - path: data/test.spacy
-      md5: f581c2209426a02f58554e97ae141a96
+      md5: 4d6225ccb2607c6a67da003a78dec855
   spacy_version: 3.5.3
   spacy_git_version: '512241e12'
 train_cpu:
-  cmd: python -m weasel run train_cpu
+  cmd: python -m spacy run train_cpu
   script:
     - python -m spacy train configs/rel_tok2vec.cfg --output training --paths.train
-      data/train.spacy --paths.dev data/dev.spacy -c ./scripts/custom_functions.py
+      data/train.spacy --paths.dev data/dev.spacy --paths.vectors en_core_web_md -c
+      ./scripts/custom_functions.py
   deps:
     - path: data/train.spacy
-      md5: c91a53c9701f502c3b8839b45d6056a5
+      md5: 500ae72fd6c4b1655b7b2c75694d7fde
     - path: data/dev.spacy
-      md5: 0716e9572fecbba1772996b5971c6e8c
+      md5: 2e9e7db2c742460dcf77ada99188c76e
   outs:
     - path: training/model-best
-      md5: bf6ee112c3dfb30a541e50b581966dc3
+      md5: 608dfd66259c5e1d8e6135a2d52cf451
+  spacy_version: 3.5.3
+  spacy_git_version: '512241e12'
 evaluate:
-  cmd: python -m weasel run evaluate
+  cmd: python -m spacy run evaluate
   script:
     - python ./scripts/evaluate.py training/model-best data/test.spacy True
   deps:
     - path: training/model-best
-      md5: 040cd59e954d3fd57add0a7221ab6257
+      md5: 608dfd66259c5e1d8e6135a2d52cf451
     - path: data/test.spacy
-      md5: d8e398b3d0d1aeb6476f040538b353da
+      md5: 4d6225ccb2607c6a67da003a78dec855
   outs: []
+  spacy_version: 3.5.3
+  spacy_git_version: '512241e12'
 clean:
   cmd: python -m weasel run clean
   script:
