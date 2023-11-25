@@ -9,6 +9,7 @@ vars:
   train_file: "data/train.spacy"
   dev_file: "data/dev.spacy"
   test_file: "data/test.spacy"
+  predict_file: "data/predict.spacy"
   trained_model: "training/model-best"
   version: "0.0.0"
   ner_rel_skill_model: "ner_rel_skills_model-0.0.0"
@@ -102,10 +103,10 @@ commands:
   - name: "evaluate"
     help: "Apply the best model to new, unseen text, and measure accuracy at different thresholds."
     script:
-      - "python ./scripts/evaluate.py ${vars.trained_model} ${vars.test_file} True"
+      - "python ./scripts/evaluate.py ${vars.trained_model} ${vars.predict_file} False"
     deps:
       - ${vars.trained_model}
-      - ${vars.test_file}
+      - ${vars.predict_file}
 
   - name: "clean"
     help: "Remove intermediate files to start data preparation and training from a clean slate."
