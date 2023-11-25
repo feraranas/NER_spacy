@@ -16,8 +16,7 @@ def main(trained_pipeline: Path, test_data: Path, print_details: bool):
     nlp = spacy.load(trained_pipeline)
 
     doc_bin = DocBin(store_user_data=True).from_disk(test_data)
-    docs = doc_bin.get_docs(nlp.vocab) # Is this the prediction line?
-
+    docs = doc_bin.get_docs(nlp.vocab)
     examples = []
     for gold in docs:
         pred = Doc(
@@ -31,17 +30,17 @@ def main(trained_pipeline: Path, test_data: Path, print_details: bool):
         examples.append(Example(pred, gold))
 
         # Print the gold and prediction, if gold label is not 0
-        # if print_details:
-        #     print()
-        #     print(f"Text: {gold.text}")
-        #     print(f"spans: {[(e.start, e.text, e.label_) for e in pred.ents]}")
-        #     for value, rel_dict in pred._.rel.items():
-        #         gold_labels = [k for (k, v) in gold._.rel[value].items() if v == 1.0]
-        #         if gold_labels:
-        #             print(
-        #                 f" pair: {value} --> gold labels: {gold_labels} --> predicted values: {rel_dict}"
-        #             )
-        #     print()
+        if print_details:
+            print()
+            print(f"Text: {gold.text}")
+            print(f"spans: {[(e.start, e.text, e.label_) for e in pred.ents]}")
+            for value, rel_dict in pred._.rel.items():
+                gold_labels = [k for (k, v) in gold._.rel[value].items() if v == 1.0]
+                if gold_labels:
+                    print(
+                        f" pair: {value} --> gold labels: {gold_labels} --> predicted values: {rel_dict}"
+                    )
+            print()
 
     random_examples = []
     docs = doc_bin.get_docs(nlp.vocab)

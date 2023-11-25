@@ -27,10 +27,10 @@ for text in data_instances:
      db.add(doc)
 
 
-db.to_disk("predict.spacy")
+db.to_disk("../data/predict.spacy")
 
 # Load data into memory
-doc_bin = DocBin(store_user_data=True).from_disk('./predict.spacy')
+doc_bin = DocBin(store_user_data=True).from_disk('../data/predict.spacy')
 docs = doc_bin.get_docs(nlp.vocab)
 
 def _score_and_format(examples, thresholds):
