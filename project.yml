@@ -24,8 +24,8 @@ directories: ["scripts", "configs", "assets", "data", "training"]
 # Assets that should be downloaded or available in the directory. You can replace
 # this with your own input data.
 assets:
-    - dest: ${vars.annotations}
-      description: "Gold-standard REL annotations created with Prodigy"
+  - dest: ${vars.annotations}
+    description: "Gold-standard REL annotations created with Prodigy"
 
 workflows:
   all:
@@ -47,7 +47,7 @@ commands:
     script:
       - "python -m spacy download en_core_web_md"
       - "pip install assets/${vars.ner_rel_skill_model}.tar.gz --no-deps"
-      
+
   - name: assemble
     help: "Build two versions of the combined pipelines from configs."
     script:
@@ -60,7 +60,7 @@ commands:
 
   - name: package
     help: "Package the pipelines so they can be installed."
-    script: 
+    script:
       - "python -m spacy package ${vars.trained_model} packages --name ner_rel_skill_model --version ${vars.version} --force"
     deps:
       - ${vars.trained_model}
@@ -120,11 +120,11 @@ commands:
       - "python -m prodigy train ./training --spancat ${vars.annotations} --eval-split ${vars.eval_split} --gpu-id ${vars.gpu_id}"
     outputs:
       - "training/model-best"
-  
+
   - name: check
     help: "Use the pipeline interactively using Streamlit"
     script:
-      - "streamlit run scripts/check.py ${vars.trained_model} \"The Security Operations Manager plans and oversees monitoring and maintenance of security operations and provides direction and leadership to internal resources. He/She provides expertise on security technologies and innovative security concepts and works toward enhancing the resilience of security operations. He coordinates ongoing reviews of existing security programs, protocols and planned upgrades. He establishes escalation processes for security incidents and develops contingency plans and disaster recovery procedures. He focuses on policy implementation and control. He is familiar with cyber security standards, protocols and frameworks, and ensures the organisations compliance with the Cyber Security Act 2018. He is knowledgeable in using various cyber security monitoring and testing tools and techniques. The Security Operations Manager is diligent and watchful in monitoring security operations, systems and activities. He is also a confident leader who develops plans and solutions to address security incidents and also one who has a passion for engaging and developing others in his team.\""
+      - 'streamlit run scripts/check.py ${vars.trained_model} "The Security Operations Manager plans and oversees monitoring and maintenance of security operations and provides direction and leadership to internal resources. He/She provides expertise on security technologies and innovative security concepts and works toward enhancing the resilience of security operations. He coordinates ongoing reviews of existing security programs, protocols and planned upgrades. He establishes escalation processes for security incidents and develops contingency plans and disaster recovery procedures. He focuses on policy implementation and control. He is familiar with cyber security standards, protocols and frameworks, and ensures the organisations compliance with the Cyber Security Act 2018. He is knowledgeable in using various cyber security monitoring and testing tools and techniques. The Security Operations Manager is diligent and watchful in monitoring security operations, systems and activities. He is also a confident leader who develops plans and solutions to address security incidents and also one who has a passion for engaging and developing others in his team."'
     deps:
       - pipelines/drugs_first
       - pipelines/drugs_second
