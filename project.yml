@@ -81,9 +81,9 @@ commands:
   - name: "train_cpu"
     help: "Train the REL model on the CPU and evaluate on the dev corpus."
     script:
-      # - "python -m spacy train ${vars.tok2vec_config} --output training --paths.train ${vars.train_file} --paths.dev ${vars.dev_file} -c ./scripts/custom_functions.py"
+      - "python -m spacy train ${vars.tok2vec_config} --output training --paths.train ${vars.train_file} --paths.dev ${vars.dev_file} -c ./scripts/custom_functions.py"
       # The following line adds --paths.vectors en_core_web_md to the training command line: TODO: check how this helps.
-      - "python -m spacy train ${vars.tok2vec_config} --output training --paths.train ${vars.train_file} --paths.dev ${vars.dev_file} --paths.vectors en_core_web_md -c ./scripts/custom_functions.py"
+      # - "python -m spacy train ${vars.tok2vec_config} --output training --paths.train ${vars.train_file} --paths.dev ${vars.dev_file} --paths.vectors en_core_web_md -c ./scripts/custom_functions.py"
     deps:
       - ${vars.train_file}
       - ${vars.dev_file}
