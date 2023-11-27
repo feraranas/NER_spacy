@@ -34,12 +34,12 @@ train_cpu:
 evaluate:
   cmd: python -m spacy run evaluate
   script:
-    - python ./scripts/evaluate.py training/model-best data/predict.spacy False
+    - python ./scripts/evaluate.py training/model-best data/test.spacy False
   deps:
     - path: training/model-best
-      md5: f9eb7ae78a2e8bf32ac856dcf6174241
-    - path: data/predict.spacy
-      md5: aad7dbde57f81beba99e630f5f4cc569
+      md5: e9f046617d410ccd67bd6475f7087d83
+    - path: data/test.spacy
+      md5: b3ff26533294c1207124c1a751be29c8
   outs: []
   spacy_version: 3.5.3
   spacy_git_version: '512241e12'
