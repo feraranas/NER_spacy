@@ -24,8 +24,8 @@ data_instances = [eg["text"] for eg in data]
 db = DocBin()
 for text in data_instances:
      doc = nlp.make_doc(text)
+     # db.add(nlp(text)) # variation of creating a spacy doc
      db.add(doc)
-
 
 db.to_disk("../data/predict.spacy")
 
