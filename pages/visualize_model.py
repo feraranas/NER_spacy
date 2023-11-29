@@ -1,4 +1,4 @@
-import spacy_streamlit
+# import spacy_streamlit
 import typer
 import spacy
 from itertools import islice
@@ -54,7 +54,7 @@ TOKEN_ATTRS = ["idx", "text", "lemma_", "pos_", "tag_", "dep_", "head", "morph",
 SPAN_ATTRS = NER_ATTRS 
 
 # fmt: on
-# FOOTER = """<span style="font-size: 0.75em">&hearts; Built with [`spacy-streamlit`](https://github.com/explosion/spacy-streamlit)</span>"""
+FOOTER = """<span style="font-size: 0.75em">&hearts; Tec de Monterrey 2023</span>"""
 
 
 def visualize(
@@ -829,14 +829,29 @@ def score_relations(examples: Iterable[Example], threshold: float) -> Dict[str, 
         "ner_micro_f": micro_prf.fscore,
     }
 
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
 
-
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
+st.set_page_config(
+    page_title="Applied models",
+    page_icon="💻",
+)
 
 text = "The Chief Information Security Officer develops and drives the vision for the information security function. He/She acts as the authority for the development and enforcement of organisation security strategy, standards and policies, and has ultimate responsibility for ensuring the protection of corporate information. He guides the design and continuous improvement of the IT security architecture and Cyber Risk Maturity Model that balances business needs with security risks. He advises the board and top executives on all security matters and sets directions for complying with regulatory inquiries, legal and compliance regulations, inspections and audits. He is an expert in cyber security compliance standards, protocols and frameworks, as well as the Cyber Security Act 2018. He is keeps abreast of cyber-related applications and hardware technologies and services, and is constantly on the look-out for new technologies that may be leveraged on to enhance work processes, or which may pose as potential threats. The Chief Information Security Officer is an inspirational and influential leader, who displays sound judgement and decisiveness in ensuring that corporate information is well protected and secured. He is strategic in his approach toward resource management and capability development among his teams."
 
@@ -849,7 +864,7 @@ def main(models: str, default_text: str):
     visualizers = ["ner"]
     # spacy_streamlit.visualize_ner(doc,
     #                               colors={"SKILL": "#d1aaff", "OCC": "linear-gradient(90deg, #fff176, #ffee58)"})
-    spacy_streamlit.visualize(models,
+    visualize(models,
             default_text,
             visualizers=visualizers,
             show_logo=False,
