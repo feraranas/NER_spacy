@@ -3,7 +3,7 @@ description: "This example project shows how to implement a spaCy component with
 
 # Variables can be referenced across the project.yml using ${vars.var_name}
 vars:
-  annotations: "assets/ner_skills_ferluis.jsonl"
+  annotations: "assets/golden.jsonl"
   tok2vec_config: "configs/rel_tok2vec.cfg"
   trf_config: "configs/rel_trf.cfg"
   train_file: "data/train.spacy"
@@ -103,10 +103,10 @@ commands:
   - name: "evaluate"
     help: "Apply the best model to new, unseen text, and measure accuracy at different thresholds."
     script:
-      - "python ./scripts/evaluate.py ${vars.trained_model} ${vars.predict_file} False"
+      - "python ./scripts/evaluate.py ${vars.trained_model} ${vars.test_file} False"
     deps:
       - ${vars.trained_model}
-      - ${vars.predict_file}
+      - ${vars.test_file}
 
   - name: "clean"
     help: "Remove intermediate files to start data preparation and training from a clean slate."

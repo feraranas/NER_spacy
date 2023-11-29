@@ -11,12 +11,12 @@ from rel_pipe import make_relation_extractor, score_relations
 # make the config work
 from rel_model import create_relation_model, create_classification_layer, create_instances, create_tensors
 
-
 def main(trained_pipeline: Path, test_data: Path, print_details: bool):
     nlp = spacy.load(trained_pipeline)
 
     doc_bin = DocBin(store_user_data=True).from_disk(test_data)
     docs = doc_bin.get_docs(nlp.vocab)
+    
     examples = []
     for gold in docs:
         pred = Doc(
