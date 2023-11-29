@@ -54,7 +54,7 @@ TOKEN_ATTRS = ["idx", "text", "lemma_", "pos_", "tag_", "dep_", "head", "morph",
 SPAN_ATTRS = NER_ATTRS 
 
 # fmt: on
-FOOTER = """<span style="font-size: 0.75em">&hearts; Tec de Monterrey 2023</span>"""
+FOOTER = """<span style="font-size: 0.75em">&hearts; Tec de Monterrey 2023</span><br><span>Luis José</span><br><span>Fernando Arana</span><br><span></span><br><span></span>"""
 
 
 def visualize(
@@ -134,14 +134,17 @@ def visualize(
     default_text = (
         get_default_text(nlp) if get_default_text is not None else default_text
     )
-    text = st.text_area("Text to analyze", default_text, key=f"{key}_visualize_text")
+    text = st.text_area("Ingresa el texto para analizar:", default_text, key=f"{key}_visualize_text")
     doc = process_text(spacy_model, text)
 
     if "parser" in visualizers and "parser" in active_visualizers:
         visualize_parser(doc, key=key)
     if "ner" in visualizers and "ner" in active_visualizers:
         ner_labels = ner_labels or nlp.get_pipe("ner").labels
-        visualize_ner(doc, labels=ner_labels, attrs=ner_attrs, key=key)
+        visualize_ner(doc, labels=ner_labels, attrs=ner_attrs, key=key, colors={"SKILL": "#d1aaff", "OCC": "linear-gradient(90deg, #fff176, #ffee58)"})
+    if "rel" in visualizers and "rel" in active_visualizers:
+        ner_labels = ner_labels or nlp.get_pipe("ner").labels
+        visualize_rel(doc)
     if "textcat" in visualizers and "textcat" in active_visualizers:
         visualize_textcat(doc)
     if "similarity" in visualizers and "similarity" in active_visualizers:
@@ -228,6 +231,9 @@ def visualize_parser(
             st.markdown(f"> {sent.text}")
         st.write(get_svg(html), unsafe_allow_html=True)
 
+def visualize_rel(doc: Union[spacy.tokens.Doc, List[Dict[str, str]]]):
+    return 0
+
 
 def visualize_ner(
     doc: Union[spacy.tokens.Doc, List[Dict[str, str]]],
@@ -265,7 +271,7 @@ def visualize_ner(
         displacy_options["colors"] = colors
 
     if title:
-        st.header(title)
+        st.subheader(title)
 
     if manual:
         if show_table:
@@ -860,17 +866,20 @@ def main(models: str, default_text: str):
     nlp = spacy.load(models[0])
     nlp.add_pipe('sentencizer')
     doc = nlp(text)
-    visualizers = ["dep", "ent", "kb", "page"]
-    visualizers = ["ner"]
+    visualizers = ["ner", "rel"]
     # spacy_streamlit.visualize_ner(doc,
     #                               colors={"SKILL": "#d1aaff", "OCC": "linear-gradient(90deg, #fff176, #ffee58)"})
     visualize(models,
             default_text,
             visualizers=visualizers,
-            show_logo=False,
             show_visualizer_select=True,
+            show_logo=False,
             sidebar_title="Skill Taxonomies Model",
+            sidebar_description="Elige uno de nuestros modelos para predecir Entidades y Relaciones.",
             color="#d1aaff")
+
+    
+    st.title("Skill Taxonomies Model")
     
 
 

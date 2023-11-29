@@ -1,34 +1,33 @@
 data:
   cmd: python -m spacy run data
   script:
-    - python ./scripts/parse_data_generic.py assets/ner_skills_ferluis.jsonl data/train.spacy
+    - python ./scripts/parse_data_generic.py assets/golden.jsonl data/train.spacy
       data/dev.spacy data/test.spacy
   deps:
-    - path: assets/ner_skills_ferluis.jsonl
+    - path: assets/golden.jsonl
       md5: 471c7d28b8459a6345062d8b49f9ae04
   outs:
     - path: data/train.spacy
-      md5: a9b630b3881665e50b606bee41c4f7c9
+      md5: 1a4a61ea5809251b0a0157d01c39ab14
     - path: data/dev.spacy
-      md5: 51285d8185b36b21a0a92ef807ef0219
+      md5: ea821de50aaf9c6c6efe96416402e354
     - path: data/test.spacy
-      md5: b3ff26533294c1207124c1a751be29c8
+      md5: 77d7ef991612211cbf69da85072727f3
   spacy_version: 3.5.3
   spacy_git_version: '512241e12'
 train_cpu:
   cmd: python -m spacy run train_cpu
   script:
     - python -m spacy train configs/rel_tok2vec.cfg --output training --paths.train
-      data/train.spacy --paths.dev data/dev.spacy --paths.vectors en_core_web_md -c
-      ./scripts/custom_functions.py
+      data/train.spacy --paths.dev data/dev.spacy -c ./scripts/custom_functions.py
   deps:
     - path: data/train.spacy
-      md5: 2f57e94fb4a7b6d60f66908dcb0e29af
+      md5: 3a36be197e020ece2d1755c05c41e731
     - path: data/dev.spacy
-      md5: 26d4f21ab3132a7dbd960557cac7824e
+      md5: 6f6b591e163ae816e178dfd58dbc7840
   outs:
     - path: training/model-best
-      md5: f9eb7ae78a2e8bf32ac856dcf6174241
+      md5: 365ae454fdd7220d6517f24618b17d32
   spacy_version: 3.5.3
   spacy_git_version: '512241e12'
 evaluate:
