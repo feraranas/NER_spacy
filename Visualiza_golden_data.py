@@ -30,8 +30,8 @@ def main(file_paths: str):
     files = [p.strip() for p in file_paths.split(",")]
     st.sidebar.title("NER & visualizer")
     st.sidebar.markdown(
-        "Entity Recognizer and Relation Extractor Skill Taxonomies"
-        "and view stats about the datasets."
+        "Entity Recognizer Skill Taxonomies. "
+        "View stats about the golden dataset."
     )
     data_file = st.sidebar.selectbox("Golden dataset", files)
     data, labels, n_total_ents, n_no_ents = load_data(data_file)
