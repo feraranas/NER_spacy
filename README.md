@@ -40,11 +40,11 @@ The following assets are defined by the project. They can
 be fetched by running [`spacy project assets`](https://spacy.io/api/cli#project-assets)
 in the project directory.
 
-### Visualizer
-Visualize the proyect via streamlit: https://skill-taxonomy.streamlit.app/
-
 | File | Source | Description |
 | --- | --- | --- |
 | [`assets/annotations.jsonl`](assets/annotations.jsonl) | Local | Gold-standard REL annotations created with Prodigy |
 
 <!-- SPACY PROJECT: AUTO-GENERATED DOCS END (do not remove) -->
+
+### Visualizer
+Visualize the proyect via streamlit: https://skill-taxonomy.streamlit.app/
