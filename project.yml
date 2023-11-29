@@ -5,7 +5,7 @@ description: "This example project shows how to implement a spaCy component with
 vars:
   annotations: "assets/golden.jsonl"
   tok2vec_config: "configs/rel_tok2vec.cfg"
-  trf_config: "configs/rel_trf.cfg"
+  trf_config: "configs/ner_trf.cfg"
   train_file: "data/train.spacy"
   dev_file: "data/dev.spacy"
   test_file: "data/test.spacy"

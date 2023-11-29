@@ -28,7 +28,9 @@ msg = Printer()
         "rel_micro_f": None,
     },
 )
-def make_relation_extractor(nlp: Language, name: str, model: Model, *, threshold: float):
+def make_relation_extractor(
+    nlp: Language, name: str, model: Model, *, threshold: float
+):
     """Construct a RelationExtractor component."""
     return RelationExtractor(nlp.vocab, model, name, threshold=threshold)
 
@@ -199,53 +201,53 @@ class RelationExtractor(TrainablePipe):
         return score_relations(examples, self.threshold)
 
 
-# def score_relations(examples: Iterable[Example], threshold: float) -> Dict[str, Any]:
-#     """Score a batch of examples."""
-#     micro_prf = PRFScore()
-#     for example in examples:
-#         gold = example.reference._.rel
-#         pred = example.predicted._.rel
-#         for key, pred_dict in pred.items():
-#             gold_labels = [k for (k, v) in gold.get(key, {}).items() if v == 1.0]
-#             for k, v in pred_dict.items():
-#                 if v >= threshold:
-#                     if k in gold_labels:
-#                         micro_prf.tp += 1
-#                     else:
-#                         micro_prf.fp += 1
-#                 else:
-#                     if k in gold_labels:
-#                         micro_prf.fn += 1
-#     return {
-#         "rel_micro_p": micro_prf.precision,
-#         "rel_micro_r": micro_prf.recall,
-#         "rel_micro_f": micro_prf.fscore,
-#     }
-
 def score_relations(examples: Iterable[Example], threshold: float) -> Dict[str, Any]:
-    """Score a batch of examples for NER."""
+    """Score a batch of examples."""
     micro_prf = PRFScore()
     for example in examples:
-        gold = example.reference.ents
-        pred = example.predicted.ents
-        gold_labels = {ent.label_: (ent.start, ent.end) for ent in gold}
-        pred_labels = {span.label_: (span.start, span.end) for span in pred}
-        for label, pred_span in pred_labels.items():
-            if label is not None:
-                if label in gold_labels:
-                    gold_span = gold_labels[label]
-                    if pred_span == gold_span:
+        gold = example.reference._.rel
+        pred = example.predicted._.rel
+        for key, pred_dict in pred.items():
+            gold_labels = [k for (k, v) in gold.get(key, {}).items() if v == 1.0]
+            for k, v in pred_dict.items():
+                if v >= threshold:
+                    if k in gold_labels:
                         micro_prf.tp += 1
                     else:
                         micro_prf.fp += 1
                 else:
-                    micro_prf.fp += 1
-        for label, gold_span in gold_labels.items():
-            if label is not None and label not in pred_labels:
-                micro_prf.fn += 1
-
+                    if k in gold_labels:
+                        micro_prf.fn += 1
     return {
-        "ner_micro_p": micro_prf.precision,
-        "ner_micro_r": micro_prf.recall,
-        "ner_micro_f": micro_prf.fscore,
+        "rel_micro_p": micro_prf.precision,
+        "rel_micro_r": micro_prf.recall,
+        "rel_micro_f": micro_prf.fscore,
     }
+
+# def score_relations(examples: Iterable[Example], threshold: float) -> Dict[str, Any]:
+#     """Score a batch of examples for NER."""
+#     micro_prf = PRFScore()
+#     for example in examples:
+#         gold = example.reference.ents
+#         pred = example.predicted.ents
+#         gold_labels = {ent.label_: (ent.start, ent.end) for ent in gold}
+#         pred_labels = {span.label_: (span.start, span.end) for span in pred}
+#         for label, pred_span in pred_labels.items():
+#             if label is not None:
+#                 if label in gold_labels:
+#                     gold_span = gold_labels[label]
+#                     if pred_span == gold_span:
+#                         micro_prf.tp += 1
+#                     else:
+#                         micro_prf.fp += 1
+#                 else:
+#                     micro_prf.fp += 1
+#         for label, gold_span in gold_labels.items():
+#             if label is not None and label not in pred_labels:
+#                 micro_prf.fn += 1
+
+#     return {
+#         "ner_micro_p": micro_prf.precision,
+#         "ner_micro_r": micro_prf.recall,
+#         "ner_micro_f": micro_prf.fscore,
+#     }
