@@ -4,6 +4,10 @@ from spacy import displacy
 import srsly
 import typer
 
+st.set_page_config(
+    page_title="Taxonomies",
+    page_icon="🔊",
+)
 
 # @st.cache(allow_output_mutation=True)
 def load_data(filepath):
@@ -59,7 +63,7 @@ def main(file_paths: str):
 
 
 if __name__ == "__main__":
-    main('./assets/golden.jsonl')
+    main(file_paths='./assets/golden.jsonl,./assets/goldenV2.jsonl')
     # try:
     #     typer.run(main)
     # except SystemExit:
