@@ -54,7 +54,7 @@ TOKEN_ATTRS = ["idx", "text", "lemma_", "pos_", "tag_", "dep_", "head", "morph",
 SPAN_ATTRS = NER_ATTRS 
 
 # fmt: on
-FOOTER = """<span style="font-size: 0.75em">&hearts; Tec de Monterrey 2023</span><br><span>Luis José</span><br><span>Fernando Arana</span><br><span></span><br><span></span>"""
+FOOTER = """<span style="font-size: 0.75em">&hearts; Tec de Monterrey 2023</span><br><span style="font-size: 0.65em">Luis José González</span><br><span style="font-size: 0.65em">Fernando Arana</span><br><span style="font-size: 0.65em">Sofía Hernández</span><br><span style="font-size: 0.75em">Abiel Borja</span><br><span style="font-size: 0.65em">Julieta Noguez</span><br><span style="font-size: 0.65em">Patricia Caratozzolo</span>"""
 
 
 def visualize(
