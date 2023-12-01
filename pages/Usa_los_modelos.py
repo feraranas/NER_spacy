@@ -1,8 +1,15 @@
 # import spacy_streamlit
 import base64
 from itertools import islice
-from typing import (Any, Callable, Dict, Iterable, List, Optional, Sequence,
-                    Tuple, Union)
+from typing import Any
+from typing import Callable
+from typing import Dict
+from typing import Iterable
+from typing import List
+from typing import Optional
+from typing import Sequence
+from typing import Tuple
+from typing import Union
 
 import numpy
 import pandas as pd
@@ -10,17 +17,26 @@ import spacy
 import streamlit as st
 import typer
 from packaging.version import Version
-from spacy import Language, displacy
+from spacy import displacy
+from spacy import Language
 from spacy.language import Language
 from spacy.pipeline.trainable_pipe import TrainablePipe
 from spacy.scorer import PRFScore
-from spacy.tokens import Doc, Span
+from spacy.tokens import Doc
+from spacy.tokens import Span
 from spacy.tokens.doc import Doc
 from spacy.training.example import Example
 from spacy.vocab import Vocab
-from thinc.api import Linear, Logistic, Model, Optimizer, chain
+from thinc.api import chain
+from thinc.api import Linear
+from thinc.api import Logistic
+from thinc.api import Model
+from thinc.api import Optimizer
 from thinc.model import set_dropout_rate
-from thinc.types import Floats2d, Ints1d, Ragged, cast
+from thinc.types import cast
+from thinc.types import Floats2d
+from thinc.types import Ints1d
+from thinc.types import Ragged
 from wasabi import Printer
 
 # from .util import load_model, process_text, get_svg, get_html, LOGO
