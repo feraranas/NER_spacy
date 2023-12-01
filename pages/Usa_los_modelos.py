@@ -41,10 +41,6 @@ from wasabi import Printer
 
 # from .util import load_model, process_text, get_svg, get_html, LOGO
 
-
-
-
-
 # make the factory work
 # from rel_pipe import make_relation_extractor, score_relations
 
@@ -69,7 +65,9 @@ def visualize(
     models: Union[List[str], Dict[str, str]],
     default_text: str = "",
     default_model: Optional[str] = None,
-    visualizers: List[str] = ["parser", "ner", "textcat", "similarity", "tokens"],
+    visualizers: List[str] = [
+        "parser", "ner", "textcat", "similarity", "tokens"
+    ],
     ner_labels: Optional[List[str]] = None,
     ner_attrs: List[str] = NER_ATTRS,
     similarity_texts: Tuple[str, str] = ("apple", "orange"),
@@ -146,11 +144,9 @@ def visualize(
 
         model_names = list(models.keys())
 
-    default_model_index = (
-        model_names.index(default_model)
-        if default_model is not None and default_model in model_names
-        else 0
-    )
+    default_model_index = (model_names.index(default_model)
+                           if default_model is not None
+                           and default_model in model_names else 0)
     spacy_model = st.sidebar.selectbox(
         "Model",
         model_names,
@@ -177,12 +173,11 @@ def visualize(
     else:
         active_visualizers = visualizers
 
-    default_text = (
-        get_default_text(nlp) if get_default_text is not None else default_text
-    )
-    text = st.text_area(
-        "Ingresa el texto para analizar:", default_text, key=f"{key}_visualize_text"
-    )
+    default_text = (get_default_text(nlp)
+                    if get_default_text is not None else default_text)
+    text = st.text_area("Ingresa el texto para analizar:",
+                        default_text,
+                        key=f"{key}_visualize_text")
     doc = process_text(spacy_model, text)
 
     if "parser" in visualizers and "parser" in active_visualizers:
@@ -267,21 +262,24 @@ def visualize_parser(
         cols = st.columns(1)
         split_sents = False
         options = {
-            "compact": cols[0].checkbox("Compact mode", key=f"{key}_parser_compact"),
+            "compact":
+            cols[0].checkbox("Compact mode", key=f"{key}_parser_compact"),
         }
     else:
         cols = st.columns(4)
-        split_sents = cols[0].checkbox(
-            "Split sentences", value=True, key=f"{key}_parser_split_sents"
-        )
+        split_sents = cols[0].checkbox("Split sentences",
+                                       value=True,
+                                       key=f"{key}_parser_split_sents")
         options = {
-            "collapse_punct": cols[1].checkbox(
-                "Collapse punct", value=True, key=f"{key}_parser_collapse_punct"
-            ),
-            "collapse_phrases": cols[2].checkbox(
-                "Collapse phrases", key=f"{key}_parser_collapse_phrases"
-            ),
-            "compact": cols[3].checkbox("Compact mode", key=f"{key}_parser_compact"),
+            "collapse_punct":
+            cols[1].checkbox("Collapse punct",
+                             value=True,
+                             key=f"{key}_parser_collapse_punct"),
+            "collapse_phrases":
+            cols[2].checkbox("Collapse phrases",
+                             key=f"{key}_parser_collapse_phrases"),
+            "compact":
+            cols[3].checkbox("Compact mode", key=f"{key}_parser_compact"),
         }
     docs = [span.as_doc() for span in doc.sents] if split_sents else [doc]
     # add selected options to options provided by user
@@ -289,9 +287,10 @@ def visualize_parser(
     # options from the checkboxes
     displacy_options = {**displacy_options, **options}
     for sent in docs:
-        html = displacy.render(
-            sent, options=displacy_options, style="dep", manual=manual
-        )
+        html = displacy.render(sent,
+                               options=displacy_options,
+                               style="dep",
+                               manual=manual)
         # Double newlines seem to mess with the rendering
         html = html.replace("\n\n", "\n")
         if split_sents and len(docs) > 1:
@@ -395,11 +394,8 @@ def visualize_ner(
         style = "<style>mark.entity { display: inline-block }</style>"
         st.write(f"{style}{get_html(html)}", unsafe_allow_html=True)
         if show_table:
-            data = [
-                [str(getattr(ent, attr)) for attr in attrs]
-                for ent in doc.ents
-                if ent.label_ in label_select
-            ]
+            data = [[str(getattr(ent, attr)) for attr in attrs]
+                    for ent in doc.ents if ent.label_ in label_select]
             if data:
                 df = pd.DataFrame(data, columns=attrs)
                 st.dataframe(df)
@@ -468,18 +464,16 @@ def visualize_spans(
     st.write(f"{get_html(html)}", unsafe_allow_html=True)
 
     if show_table:
-        data = [
-            [str(getattr(span, attr)) for attr in attrs]
-            for span in doc.spans[spans_key]
-        ]
+        data = [[str(getattr(span, attr)) for attr in attrs]
+                for span in doc.spans[spans_key]]
         if data:
             df = pd.DataFrame(data, columns=attrs)
             st.dataframe(df)
 
 
-def visualize_textcat(
-    doc: spacy.tokens.Doc, *, title: Optional[str] = "Text Classification"
-) -> None:
+def visualize_textcat(doc: spacy.tokens.Doc,
+                      *,
+                      title: Optional[str] = "Text Classification") -> None:
     """Visualizer for text categories.
 
     :param doc: spacy.tokens.Doc:
@@ -521,12 +515,12 @@ def visualize_similarity(
         st.warning("No vectors available in the model.")
     else:
         cols = st.columns(2)
-        text1 = cols[0].text_input(
-            "Text or word 1", default_texts[0], key=f"{key}_similarity_text1"
-        )
-        text2 = cols[1].text_input(
-            "Text or word 2", default_texts[1], key=f"{key}_similarity_text2"
-        )
+        text1 = cols[0].text_input("Text or word 1",
+                                   default_texts[0],
+                                   key=f"{key}_similarity_text1")
+        text2 = cols[1].text_input("Text or word 2",
+                                   default_texts[1],
+                                   key=f"{key}_similarity_text2")
         doc1 = nlp.make_doc(text1)
         doc2 = nlp.make_doc(text2)
         similarity = doc1.similarity(doc2)
@@ -619,7 +613,9 @@ def get_html(html: str):
 
 LOGO_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 900 500 175" width="150" height="53"><path fill="#09A3D5" d="M64.8 970.6c-11.3-1.3-12.2-16.5-26.7-15.2-7 0-13.6 2.9-13.6 9.4 0 9.7 15 10.6 24.1 13.1 15.4 4.7 30.4 7.9 30.4 24.7 0 21.3-16.7 28.7-38.7 28.7-18.4 0-37.1-6.5-37.1-23.5 0-4.7 4.5-8.4 8.9-8.4 5.5 0 7.5 2.3 9.4 6.2 4.3 7.5 9.1 11.6 21 11.6 7.5 0 15.3-2.9 15.3-9.4 0-9.3-9.5-11.3-19.3-13.6-17.4-4.9-32.3-7.4-34-26.7-1.8-32.9 66.7-34.1 70.6-5.3-.3 5.2-5.2 8.4-10.3 8.4zm81.5-28.8c24.1 0 37.7 20.1 37.7 44.9 0 24.9-13.2 44.9-37.7 44.9-13.6 0-22.1-5.8-28.2-14.7v32.9c0 9.9-3.2 14.7-10.4 14.7-8.8 0-10.4-5.6-10.4-14.7v-95.6c0-7.8 3.3-12.6 10.4-12.6 6.7 0 10.4 5.3 10.4 12.6v2.7c6.8-8.5 14.6-15.1 28.2-15.1zm-5.7 72.8c14.1 0 20.4-13 20.4-28.2 0-14.8-6.4-28.2-20.4-28.2-14.7 0-21.5 12.1-21.5 28.2.1 15.7 6.9 28.2 21.5 28.2zm59.8-49.3c0-17.3 19.9-23.5 39.2-23.5 27.1 0 38.2 7.9 38.2 34v25.2c0 6 3.7 17.9 3.7 21.5 0 5.5-5 8.9-10.4 8.9-6 0-10.4-7-13.6-12.1-8.8 7-18.1 12.1-32.4 12.1-15.8 0-28.2-9.3-28.2-24.7 0-13.6 9.7-21.4 21.5-24.1 0 .1 37.7-8.9 37.7-9 0-11.6-4.1-16.7-16.3-16.7-10.7 0-16.2 2.9-20.4 9.4-3.4 4.9-2.9 7.8-9.4 7.8-5.1 0-9.6-3.6-9.6-8.8zm32.2 51.9c16.5 0 23.5-8.7 23.5-26.1v-3.7c-4.4 1.5-22.4 6-27.3 6.7-5.2 1-10.4 4.9-10.4 11 .2 6.7 7.1 12.1 14.2 12.1zM354 909c23.3 0 48.6 13.9 48.6 36.1 0 5.7-4.3 10.4-9.9 10.4-7.6 0-8.7-4.1-12.1-9.9-5.6-10.3-12.2-17.2-26.7-17.2-22.3-.2-32.3 19-32.3 42.8 0 24 8.3 41.3 31.4 41.3 15.3 0 23.8-8.9 28.2-20.4 1.8-5.3 4.9-10.4 11.6-10.4 5.2 0 10.4 5.3 10.4 11 0 23.5-24 39.7-48.6 39.7-27 0-42.3-11.4-50.6-30.4-4.1-9.1-6.7-18.4-6.7-31.4-.4-36.4 20.8-61.6 56.7-61.6zm133.3 32.8c6 0 9.4 3.9 9.4 9.9 0 2.4-1.9 7.3-2.7 9.9l-28.7 75.4c-6.4 16.4-11.2 27.7-32.9 27.7-10.3 0-19.3-.9-19.3-9.9 0-5.2 3.9-7.8 9.4-7.8 1 0 2.7.5 3.7.5 1.6 0 2.7.5 3.7.5 10.9 0 12.4-11.2 16.3-18.9l-27.7-68.5c-1.6-3.7-2.7-6.2-2.7-8.4 0-6 4.7-10.4 11-10.4 7 0 9.8 5.5 11.6 11.6l18.3 54.3 18.3-50.2c2.7-7.8 3-15.7 12.3-15.7z" /> </svg>"""
 
-LOGO = get_svg(LOGO_SVG, wrap=False, style="max-width: 100%; margin-bottom: 25px")
+LOGO = get_svg(LOGO_SVG,
+               wrap=False,
+               style="max-width: 100%; margin-bottom: 25px")
 
 
 @spacy.registry.architectures("rel_model.v1")
@@ -636,14 +632,14 @@ def create_relation_model(
     """
     with Model.define_operators({">>": chain}):
         model = create_instance_tensor >> classification_layer
-        model.attrs["get_instances"] = create_instance_tensor.attrs["get_instances"]
+        model.attrs["get_instances"] = create_instance_tensor.attrs[
+            "get_instances"]
     return model
 
 
 @spacy.registry.architectures("rel_classification_layer.v1")
-def create_classification_layer(
-    nO: int = None, nI: int = None
-) -> Model[Floats2d, Floats2d]:
+def create_classification_layer(nO: int = None,
+                                nI: int = None) -> Model[Floats2d, Floats2d]:
     """
 
     :param nO: int:  (Default value = None)
@@ -655,12 +651,14 @@ def create_classification_layer(
 
 
 @spacy.registry.misc("rel_instance_generator.v1")
-def create_instances(max_length: int) -> Callable[[Doc], List[Tuple[Span, Span]]]:
+def create_instances(
+        max_length: int) -> Callable[[Doc], List[Tuple[Span, Span]]]:
     """
 
     :param max_length: int:
 
     """
+
     def get_instances(doc: Doc) -> List[Tuple[Span, Span]]:
         """
 
@@ -671,7 +669,8 @@ def create_instances(max_length: int) -> Callable[[Doc], List[Tuple[Span, Span]]
         for ent1 in doc.ents:
             for ent2 in doc.ents:
                 if ent1 != ent2:
-                    if max_length and abs(ent2.start - ent1.start) <= max_length:
+                    if max_length and abs(ent2.start -
+                                          ent1.start) <= max_length:
                         instances.append((ent1, ent2))
         return instances
 
@@ -716,15 +715,17 @@ def create_tensors(
         "instance_tensors",
         instance_forward,
         layers=[tok2vec, pooling],
-        refs={"tok2vec": tok2vec, "pooling": pooling},
+        refs={
+            "tok2vec": tok2vec,
+            "pooling": pooling
+        },
         attrs={"get_instances": get_instances},
         init=instance_init,
     )
 
 
-def instance_forward(
-    model: Model[List[Doc], Floats2d], docs: List[Doc], is_train: bool
-) -> Tuple[Floats2d, Callable]:
+def instance_forward(model: Model[List[Doc], Floats2d], docs: List[Doc],
+                     is_train: bool) -> Tuple[Floats2d, Callable]:
     """
 
     :param model: Model[List[Doc]:
@@ -762,7 +763,8 @@ def instance_forward(
         :param d_relations: Floats2d:
 
         """
-        d_pooled = model.ops.reshape2f(d_relations, d_relations.shape[0] * 2, -1)
+        d_pooled = model.ops.reshape2f(d_relations, d_relations.shape[0] * 2,
+                                       -1)
         d_ents = bp_pooled(d_pooled).data
         d_tokvecs = []
         ent_index = 0
@@ -772,8 +774,8 @@ def instance_forward(
             count_occ = model.ops.alloc2f(*shape)
             for instance in instances:
                 for ent in instance:
-                    d_tokvec[ent.start : ent.end] += d_ents[ent_index]
-                    count_occ[ent.start : ent.end] += 1
+                    d_tokvec[ent.start:ent.end] += d_ents[ent_index]
+                    count_occ[ent.start:ent.end] += 1
                     ent_index += ent.end - ent.start
             d_tokvec /= count_occ + 0.00000000001
             d_tokvecs.append(d_tokvec)
@@ -784,7 +786,9 @@ def instance_forward(
     return relations, backprop
 
 
-def instance_init(model: Model, X: List[Doc] = None, Y: Floats2d = None) -> Model:
+def instance_init(model: Model,
+                  X: List[Doc] = None,
+                  Y: Floats2d = None) -> Model:
     """
 
     :param model: Model:
@@ -812,9 +816,8 @@ msg = Printer()
         "rel_micro_f": None,
     },
 )
-def make_relation_extractor(
-    nlp: Language, name: str, model: Model, *, threshold: float
-):
+def make_relation_extractor(nlp: Language, name: str, model: Model, *,
+                            threshold: float):
     """Construct a RelationExtractor component.
 
     :param nlp: Language:
@@ -829,6 +832,7 @@ def make_relation_extractor(
 
 class RelationExtractor(TrainablePipe):
     """ """
+
     def __init__(
         self,
         vocab: Vocab,
@@ -861,8 +865,7 @@ class RelationExtractor(TrainablePipe):
         """
         if not isinstance(label, str):
             raise ValueError(
-                "Only strings can be added as labels to the RelationExtractor"
-            )
+                "Only strings can be added as labels to the RelationExtractor")
         if label in self.labels:
             return 0
         self.cfg["labels"] = list(self.labels) + [label]
@@ -873,7 +876,9 @@ class RelationExtractor(TrainablePipe):
         # check that there are actually any candidate instances in this batch of examples
         total_instances = len(self.model.attrs["get_instances"](doc))
         if total_instances == 0:
-            msg.info("Could not determine any instances in doc - returning doc as is.")
+            msg.info(
+                "Could not determine any instances in doc - returning doc as is."
+            )
             return doc
 
         predictions = self.predict([doc])
@@ -942,7 +947,8 @@ class RelationExtractor(TrainablePipe):
         # check that there are actually any candidate instances in this batch of examples
         total_instances = 0
         for eg in examples:
-            total_instances += len(self.model.attrs["get_instances"](eg.predicted))
+            total_instances += len(self.model.attrs["get_instances"](
+                eg.predicted))
         if total_instances == 0:
             msg.info("Could not determine any instances in doc.")
             return losses
@@ -959,7 +965,8 @@ class RelationExtractor(TrainablePipe):
             self.set_annotations(docs, predictions)
         return losses
 
-    def get_loss(self, examples: Iterable[Example], scores) -> Tuple[float, float]:
+    def get_loss(self, examples: Iterable[Example],
+                 scores) -> Tuple[float, float]:
         """Find the loss and gradient of loss for the batch of documents and
         their predicted scores.
 
@@ -1006,11 +1013,11 @@ class RelationExtractor(TrainablePipe):
         if label_sample is None:
             raise ValueError(
                 "Call begin_training with relevant entities and relations annotated in "
-                "at least a few reference examples!"
-            )
+                "at least a few reference examples!")
         self.model.initialize(X=doc_sample, Y=label_sample)
 
-    def _examples_to_truth(self, examples: List[Example]) -> Optional[numpy.ndarray]:
+    def _examples_to_truth(self,
+                           examples: List[Example]) -> Optional[numpy.ndarray]:
         """
 
         :param examples: List[Example]:
@@ -1019,7 +1026,8 @@ class RelationExtractor(TrainablePipe):
         # check that there are actually any candidate instances in this batch of examples
         nr_instances = 0
         for eg in examples:
-            nr_instances += len(self.model.attrs["get_instances"](eg.reference))
+            nr_instances += len(self.model.attrs["get_instances"](
+                eg.reference))
         if nr_instances == 0:
             return None
 
@@ -1027,7 +1035,8 @@ class RelationExtractor(TrainablePipe):
         c = 0
         for i, eg in enumerate(examples):
             for e1, e2 in self.model.attrs["get_instances"](eg.reference):
-                gold_label_dict = eg.reference._.rel.get((e1.start, e2.start), {})
+                gold_label_dict = eg.reference._.rel.get((e1.start, e2.start),
+                                                         {})
                 for j, label in enumerate(self.labels):
                     truths[c, j] = gold_label_dict.get(label, 0)
                 c += 1
@@ -1069,7 +1078,8 @@ class RelationExtractor(TrainablePipe):
 #     }
 
 
-def score_relations(examples: Iterable[Example], threshold: float) -> Dict[str, Any]:
+def score_relations(examples: Iterable[Example],
+                    threshold: float) -> Dict[str, Any]:
     """Score a batch of examples for NER.
 
     :param examples: Iterable[Example]:
@@ -1122,7 +1132,6 @@ def score_relations(examples: Iterable[Example], threshold: float) -> Dict[str, 
 ########################################################################################################################
 ########################################################################################################################
 
-
 st.set_page_config(
     page_title="Applied models",
     page_icon="💻",
@@ -1152,7 +1161,8 @@ def main(models: str, default_text: str):
         show_visualizer_select=True,
         show_logo=False,
         sidebar_title="Skill Taxonomies Model",
-        sidebar_description="Elige uno de nuestros modelos para predecir Entidades y Relaciones.",
+        sidebar_description=
+        "Elige uno de nuestros modelos para predecir Entidades y Relaciones.",
         color="#d1aaff",
     )
 
@@ -1160,7 +1170,8 @@ def main(models: str, default_text: str):
 
 
 if __name__ == "__main__":
-    main(models="./training/model-best,./training/model-last", default_text=text)
+    main(models="./training/model-best,./training/model-last",
+         default_text=text)
     # try:
     #     typer.run(main)
     # except SystemExit:
