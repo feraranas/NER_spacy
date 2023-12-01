@@ -70,7 +70,37 @@ def visualize(
     key: Optional[str] = None,
     get_default_text: Callable[[Language], str] = None,
 ) -> None:
-    """Embed the full visualizer with selected components."""
+    """Embed the full visualizer with selected components.
+
+    :param models: Union[List[str]: 
+    :param Dict[str: 
+    :param str]]: 
+    :param default_text: str:  (Default value = "")
+    :param default_model: Optional[str]:  (Default value = None)
+    :param visualizers: List[str]:  (Default value = ["parser")
+    :param "ner": 
+    :param "textcat": 
+    :param "similarity": 
+    :param "tokens"]: 
+    :param ner_labels: Optional[List[str]]:  (Default value = None)
+    :param ner_attrs: List[str]:  (Default value = NER_ATTRS)
+    :param similarity_texts: Tuple[str: 
+    :param str]:  (Default value = None)
+    :param "orange"): 
+    :param token_attrs: List[str]:  (Default value = TOKEN_ATTRS)
+    :param show_json_doc: bool:  (Default value = True)
+    :param show_meta: bool:  (Default value = True)
+    :param show_config: bool:  (Default value = True)
+    :param show_visualizer_select: bool:  (Default value = False)
+    :param show_pipeline_info: bool:  (Default value = True)
+    :param sidebar_title: Optional[str]:  (Default value = None)
+    :param sidebar_description: Optional[str]:  (Default value = None)
+    :param show_logo: bool:  (Default value = True)
+    :param color: Optional[str]:  (Default value = "#09A3D5")
+    :param key: Optional[str]:  (Default value = None)
+    :param get_default_text: Callable[[Language]: 
+
+    """
 
     if st.config.get_option("theme.primaryColor") != color:
         st.config.set_option("theme.primaryColor", color)
@@ -91,6 +121,11 @@ def visualize(
     if isinstance(models, dict):
 
         def format_func(name):
+            """
+
+            :param name: 
+
+            """
             return models.get(name, name)
 
         model_names = list(models.keys())
@@ -187,13 +222,23 @@ def visualize_parser(
     displacy_options: Optional[Dict] = None,
 ) -> None:
     """Visualizer for dependency parses.
-
+    
     doc (Doc, List): The document to visualize.
     key (str): Key used for the streamlit component for selecting labels.
     title (str): The title displayed at the top of the parser visualization.
     manual (bool): Flag signifying whether the doc argument is a Doc object or a List of Dicts containing parse information.
     displacy_options (Dict): Dictionary of options to be passed to the displacy render method for generating the HTML to be rendered.
       See: https://spacy.io/api/top-level#options-dep
+
+    :param doc: Union[spacy.tokens.Doc: 
+    :param List[Dict[str: 
+    :param str]]]: 
+    :param *: 
+    :param title: Optional[str]:  (Default value = "Dependency Parse & Part-of-speech tags")
+    :param key: Optional[str]:  (Default value = None)
+    :param manual: bool:  (Default value = False)
+    :param displacy_options: Optional[Dict]:  (Default value = None)
+
     """
     if displacy_options is None:
         displacy_options = dict()
@@ -239,6 +284,13 @@ def visualize_parser(
 
 
 def visualize_rel(doc: Union[spacy.tokens.Doc, List[Dict[str, str]]]):
+    """
+
+    :param doc: Union[spacy.tokens.Doc: 
+    :param List[Dict[str: 
+    :param str]]]: 
+
+    """
     return 0
 
 
@@ -254,9 +306,8 @@ def visualize_ner(
     manual: bool = False,
     displacy_options: Optional[Dict] = None,
 ):
-    """
-    Visualizer for named entities.
-
+    """Visualizer for named entities.
+    
     doc (Doc, List): The document to visualize.
     labels (list): The entity labels to visualize.
     attrs (list):  The attributes on the entity Span to be labeled. Attributes are displayed only when the show_table
@@ -271,6 +322,21 @@ def visualize_ner(
     information.
     displacy_options (Dict): Dictionary of options to be passed to the displacy render method for generating the HTML to be rendered.
       See https://spacy.io/api/top-level#displacy_options-ent.
+
+    :param doc: Union[spacy.tokens.Doc: 
+    :param List[Dict[str: 
+    :param str]]]: 
+    :param *: 
+    :param labels: Sequence[str]:  (Default value = tuple())
+    :param attrs: List[str]:  (Default value = NER_ATTRS)
+    :param show_table: bool:  (Default value = True)
+    :param title: Optional[str]:  (Default value = "Named Entities")
+    :param colors: Dict[str: 
+    :param str]:  (Default value = {})
+    :param key: Optional[str]:  (Default value = None)
+    :param manual: bool:  (Default value = False)
+    :param displacy_options: Optional[Dict]:  (Default value = None)
+
     """
     if not displacy_options:
         displacy_options = dict()
@@ -333,9 +399,8 @@ def visualize_spans(
     manual: bool = False,
     displacy_options: Optional[Dict] = None,
 ):
-    """
-    Visualizer for spans.
-
+    """Visualizer for spans.
+    
     doc (Doc, Dict): The document to visualize.
     spans_key (str): Which spans key to render spans from. Default is "sc".
     attrs (list):  The attributes on the entity Span to be labeled. Attributes are displayed only when the show_table
@@ -345,6 +410,18 @@ def visualize_spans(
     manual (bool): Flag signifying whether the doc argument is a Doc object or a List of Dicts containing span information.
     displacy_options (Dict): Dictionary of options to be passed to the displacy render method for generating the HTML to be rendered.
       See https://spacy.io/api/top-level#displacy_options-span
+
+    :param doc: Union[spacy.tokens.Doc: 
+    :param Dict[str: 
+    :param str]]: 
+    :param *: 
+    :param spans_key: str:  (Default value = "sc")
+    :param attrs: List[str]:  (Default value = SPAN_ATTRS)
+    :param show_table: bool:  (Default value = True)
+    :param title: Optional[str]:  (Default value = "Spans")
+    :param manual: bool:  (Default value = False)
+    :param displacy_options: Optional[Dict]:  (Default value = None)
+
     """
     if SPACY_VERSION < Version("3.3.0"):
         raise ValueError(
@@ -387,7 +464,13 @@ def visualize_spans(
 def visualize_textcat(
     doc: spacy.tokens.Doc, *, title: Optional[str] = "Text Classification"
 ) -> None:
-    """Visualizer for text categories."""
+    """Visualizer for text categories.
+
+    :param doc: spacy.tokens.Doc: 
+    :param *: 
+    :param title: Optional[str]:  (Default value = "Text Classification")
+
+    """
     if title:
         st.header(title)
     st.markdown(f"> {doc.text}")
@@ -403,7 +486,18 @@ def visualize_similarity(
     title: Optional[str] = "Vectors & Similarity",
     key: Optional[str] = None,
 ) -> None:
-    """Visualizer for semantic similarity using word vectors."""
+    """Visualizer for semantic similarity using word vectors.
+
+    :param nlp: spacy.language.Language: 
+    :param default_texts: Tuple[str: 
+    :param str]:  (Default value = ("apple")
+    :param "orange"): 
+    :param *: 
+    :param threshold: float:  (Default value = 0.5)
+    :param title: Optional[str]:  (Default value = "Vectors & Similarity")
+    :param key: Optional[str]:  (Default value = None)
+
+    """
     meta = nlp.meta.get("vectors", {})
     if title:
         st.header(title)
@@ -437,7 +531,15 @@ def visualize_tokens(
     title: Optional[str] = "Token attributes",
     key: Optional[str] = None,
 ) -> None:
-    """Visualizer for token attributes."""
+    """Visualizer for token attributes.
+
+    :param doc: spacy.tokens.Doc: 
+    :param *: 
+    :param attrs: List[str]:  (Default value = TOKEN_ATTRS)
+    :param title: Optional[str]:  (Default value = "Token attributes")
+    :param key: Optional[str]:  (Default value = None)
+
+    """
     if title:
         st.header(title)
     exp = st.expander("Select token attributes")
@@ -454,26 +556,45 @@ def visualize_tokens(
 
 @st.cache_resource
 def load_model(name: str) -> spacy.language.Language:
-    """Load a spaCy model."""
+    """Load a spaCy model.
+
+    :param name: str: 
+
+    """
     return spacy.load(name)
 
 
 @st.cache_data
 def process_text(model_name: str, text: str) -> spacy.tokens.Doc:
-    """Process a text and create a Doc object."""
+    """Process a text and create a Doc object.
+
+    :param model_name: str: 
+    :param text: str: 
+
+    """
     nlp = load_model(model_name)
     return nlp(text)
 
 
 def get_svg(svg: str, style: str = "", wrap: bool = True):
-    """Convert an SVG to a base64-encoded image."""
+    """Convert an SVG to a base64-encoded image.
+
+    :param svg: str: 
+    :param style: str:  (Default value = "")
+    :param wrap: bool:  (Default value = True)
+
+    """
     b64 = base64.b64encode(svg.encode("utf-8")).decode("utf-8")
     html = f'<img src="data:image/svg+xml;base64,{b64}" style="{style}"/>'
     return get_html(html) if wrap else html
 
 
 def get_html(html: str):
-    """Convert HTML so it can be rendered."""
+    """Convert HTML so it can be rendered.
+
+    :param html: str: 
+
+    """
     WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem; margin-bottom: 2.5rem">{}</div>"""
     # Newlines seem to mess with the rendering
     html = html.replace("\n", " ")
@@ -490,6 +611,13 @@ def create_relation_model(
     create_instance_tensor: Model[List[Doc], Floats2d],
     classification_layer: Model[Floats2d, Floats2d],
 ) -> Model[List[Doc], Floats2d]:
+    """
+
+    :param create_instance_tensor: Model[List[Doc]: 
+    :param Floats2d]: 
+    :param classification_layer: Model[Floats2d: 
+
+    """
     with Model.define_operators({">>": chain}):
         model = create_instance_tensor >> classification_layer
         model.attrs["get_instances"] = create_instance_tensor.attrs["get_instances"]
@@ -500,13 +628,29 @@ def create_relation_model(
 def create_classification_layer(
     nO: int = None, nI: int = None
 ) -> Model[Floats2d, Floats2d]:
+    """
+
+    :param nO: int:  (Default value = None)
+    :param nI: int:  (Default value = None)
+
+    """
     with Model.define_operators({">>": chain}):
         return Linear(nO=nO, nI=nI) >> Logistic()
 
 
 @spacy.registry.misc("rel_instance_generator.v1")
 def create_instances(max_length: int) -> Callable[[Doc], List[Tuple[Span, Span]]]:
+    """
+
+    :param max_length: int: 
+
+    """
     def get_instances(doc: Doc) -> List[Tuple[Span, Span]]:
+        """
+
+        :param doc: Doc: 
+
+        """
         instances = []
         for ent1 in doc.ents:
             for ent2 in doc.ents:
@@ -541,6 +685,17 @@ def create_tensors(
     pooling: Model[Ragged, Floats2d],
     get_instances: Callable[[Doc], List[Tuple[Span, Span]]],
 ) -> Model[List[Doc], Floats2d]:
+    """
+
+    :param tok2vec: Model[List[Doc]: 
+    :param List[Floats2d]]: 
+    :param pooling: Model[Ragged: 
+    :param Floats2d]: 
+    :param get_instances: Callable[[Doc]: 
+    :param List[Tuple[Span: 
+    :param Span]]]: 
+
+    """
     return Model(
         "instance_tensors",
         instance_forward,
@@ -554,6 +709,14 @@ def create_tensors(
 def instance_forward(
     model: Model[List[Doc], Floats2d], docs: List[Doc], is_train: bool
 ) -> Tuple[Floats2d, Callable]:
+    """
+
+    :param model: Model[List[Doc]: 
+    :param Floats2d]: 
+    :param docs: List[Doc]: 
+    :param is_train: bool: 
+
+    """
     pooling = model.get_ref("pooling")
     tok2vec = model.get_ref("tok2vec")
     get_instances = model.attrs["get_instances"]
@@ -578,6 +741,11 @@ def instance_forward(
     relations = model.ops.reshape2f(pooled, -1, pooled.shape[1] * 2)
 
     def backprop(d_relations: Floats2d) -> List[Doc]:
+        """
+
+        :param d_relations: Floats2d: 
+
+        """
         d_pooled = model.ops.reshape2f(d_relations, d_relations.shape[0] * 2, -1)
         d_ents = bp_pooled(d_pooled).data
         d_tokvecs = []
@@ -601,6 +769,13 @@ def instance_forward(
 
 
 def instance_init(model: Model, X: List[Doc] = None, Y: Floats2d = None) -> Model:
+    """
+
+    :param model: Model: 
+    :param X: List[Doc]:  (Default value = None)
+    :param Y: Floats2d:  (Default value = None)
+
+    """
     tok2vec = model.get_ref("tok2vec")
     if X is not None:
         tok2vec.initialize(X)
@@ -624,11 +799,20 @@ msg = Printer()
 def make_relation_extractor(
     nlp: Language, name: str, model: Model, *, threshold: float
 ):
-    """Construct a RelationExtractor component."""
+    """Construct a RelationExtractor component.
+
+    :param nlp: Language: 
+    :param name: str: 
+    :param model: Model: 
+    :param *: 
+    :param threshold: float: 
+
+    """
     return RelationExtractor(nlp.vocab, model, name, threshold=threshold)
 
 
 class RelationExtractor(TrainablePipe):
+    """ """
     def __init__(
         self,
         vocab: Vocab,
@@ -654,7 +838,11 @@ class RelationExtractor(TrainablePipe):
         return self.cfg["threshold"]
 
     def add_label(self, label: str) -> int:
-        """Add a new label to the pipe."""
+        """Add a new label to the pipe.
+
+        :param label: str: 
+
+        """
         if not isinstance(label, str):
             raise ValueError(
                 "Only strings can be added as labels to the RelationExtractor"
@@ -677,7 +865,11 @@ class RelationExtractor(TrainablePipe):
         return doc
 
     def predict(self, docs: Iterable[Doc]) -> Floats2d:
-        """Apply the pipeline's model to a batch of docs, without modifying them."""
+        """Apply the pipeline's model to a batch of docs, without modifying them.
+
+        :param docs: Iterable[Doc]: 
+
+        """
         get_instances = self.model.attrs["get_instances"]
         total_instances = sum([len(get_instances(doc)) for doc in docs])
         if total_instances == 0:
@@ -688,7 +880,12 @@ class RelationExtractor(TrainablePipe):
         return self.model.ops.asarray(scores)
 
     def set_annotations(self, docs: Iterable[Doc], scores: Floats2d) -> None:
-        """Modify a batch of `Doc` objects, using pre-computed scores."""
+        """Modify a batch of `Doc` objects, using pre-computed scores.
+
+        :param docs: Iterable[Doc]: 
+        :param scores: Floats2d: 
+
+        """
         c = 0
         get_instances = self.model.attrs["get_instances"]
         for doc in docs:
@@ -710,7 +907,17 @@ class RelationExtractor(TrainablePipe):
         losses: Optional[Dict[str, float]] = None,
     ) -> Dict[str, float]:
         """Learn from a batch of documents and gold-standard information,
-        updating the pipe's model. Delegates to predict and get_loss."""
+        updating the pipe's model. Delegates to predict and get_loss.
+
+        :param examples: Iterable[Example]: 
+        :param *: 
+        :param drop: float:  (Default value = 0.0)
+        :param set_annotations: bool:  (Default value = False)
+        :param sgd: Optional[Optimizer]:  (Default value = None)
+        :param losses: Optional[Dict[str: 
+        :param float]]:  (Default value = None)
+
+        """
         if losses is None:
             losses = {}
         losses.setdefault(self.name, 0.0)
@@ -738,7 +945,12 @@ class RelationExtractor(TrainablePipe):
 
     def get_loss(self, examples: Iterable[Example], scores) -> Tuple[float, float]:
         """Find the loss and gradient of loss for the batch of documents and
-        their predicted scores."""
+        their predicted scores.
+
+        :param examples: Iterable[Example]: 
+        :param scores: 
+
+        """
         truths = self._examples_to_truth(examples)
         gradient = scores - truths
         mean_square_error = (gradient**2).sum(axis=1).mean()
@@ -753,6 +965,13 @@ class RelationExtractor(TrainablePipe):
     ):
         """Initialize the pipe for training, using a representative set
         of data examples.
+
+        :param get_examples: Callable[[]: 
+        :param Iterable[Example]]: 
+        :param *: 
+        :param nlp: Language:  (Default value = None)
+        :param labels: Optional[List[str]]:  (Default value = None)
+
         """
         if labels is not None:
             for label in labels:
@@ -776,6 +995,11 @@ class RelationExtractor(TrainablePipe):
         self.model.initialize(X=doc_sample, Y=label_sample)
 
     def _examples_to_truth(self, examples: List[Example]) -> Optional[numpy.ndarray]:
+        """
+
+        :param examples: List[Example]: 
+
+        """
         # check that there are actually any candidate instances in this batch of examples
         nr_instances = 0
         for eg in examples:
@@ -796,7 +1020,12 @@ class RelationExtractor(TrainablePipe):
         return truths
 
     def score(self, examples: Iterable[Example], **kwargs) -> Dict[str, Any]:
-        """Score a batch of examples."""
+        """Score a batch of examples.
+
+        :param examples: Iterable[Example]: 
+        :param **kwargs: 
+
+        """
         return score_relations(examples, self.threshold)
 
 
@@ -825,7 +1054,12 @@ class RelationExtractor(TrainablePipe):
 
 
 def score_relations(examples: Iterable[Example], threshold: float) -> Dict[str, Any]:
-    """Score a batch of examples for NER."""
+    """Score a batch of examples for NER.
+
+    :param examples: Iterable[Example]: 
+    :param threshold: float: 
+
+    """
     micro_prf = PRFScore()
     for example in examples:
         gold = example.reference.ents
@@ -882,6 +1116,12 @@ text = "The Chief Information Security Officer develops and drives the vision fo
 
 
 def main(models: str, default_text: str):
+    """
+
+    :param models: str: 
+    :param default_text: str: 
+
+    """
     models = [name.strip() for name in models.split(",")]
     nlp = spacy.load(models[0])
     nlp.add_pipe("sentencizer")
