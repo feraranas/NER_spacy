@@ -1,41 +1,33 @@
 # import spacy_streamlit
-import typer
-import spacy
+import base64
 from itertools import islice
-from typing import Tuple, List, Iterable, Optional, Dict, Callable, Any
+from typing import (Any, Callable, Dict, Iterable, List, Optional, Sequence,
+                    Tuple, Union)
 
-from typing import List, Sequence, Tuple, Optional, Dict, Union, Callable
-from packaging.version import Version
-import streamlit as st
-import spacy
-from spacy.language import Language
-from spacy import displacy
+import numpy
 import pandas as pd
+import spacy
+import streamlit as st
+import typer
+from packaging.version import Version
+from spacy import Language, displacy
+from spacy.language import Language
+from spacy.pipeline.trainable_pipe import TrainablePipe
+from spacy.scorer import PRFScore
+from spacy.tokens import Doc, Span
+from spacy.tokens.doc import Doc
+from spacy.training.example import Example
+from spacy.vocab import Vocab
+from thinc.api import Linear, Logistic, Model, Optimizer, chain
+from thinc.model import set_dropout_rate
+from thinc.types import Floats2d, Ints1d, Ragged, cast
+from wasabi import Printer
 
 # from .util import load_model, process_text, get_svg, get_html, LOGO
 
-from spacy.scorer import PRFScore
-from thinc.types import Floats2d
-import numpy
-from spacy.training.example import Example
-from thinc.api import Model, Optimizer
-from spacy.tokens.doc import Doc
-from spacy.pipeline.trainable_pipe import TrainablePipe
-from spacy.vocab import Vocab
-from spacy import Language
-from thinc.model import set_dropout_rate
-from wasabi import Printer
 
-from typing import List, Tuple, Callable
 
-import spacy
-from spacy.tokens import Doc, Span
-from thinc.types import Floats2d, Ints1d, Ragged, cast
-from thinc.api import Model, Linear, chain, Logistic
 
-import streamlit as st
-import spacy
-import base64
 
 # make the factory work
 # from rel_pipe import make_relation_extractor, score_relations
