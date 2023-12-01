@@ -61,7 +61,8 @@ def visualize(
     models: Union[List[str], Dict[str, str]],
     default_text: str = "",
     default_model: Optional[str] = None,
-    visualizers: List[str] = ["parser", "ner", "textcat", "similarity", "tokens"],
+    visualizers: List[str] = ["parser", "ner",
+                              "textcat", "similarity", "tokens"],
     ner_labels: Optional[List[str]] = None,
     ner_attrs: List[str] = NER_ATTRS,
     similarity_texts: Tuple[str, str] = ("apple", "orange"),
@@ -97,7 +98,7 @@ def visualize(
     model_names = models
     format_func = str
     if isinstance(models, dict):
-        format_func = lambda name: models.get(name, name)
+        def format_func(name): return models.get(name, name)
         model_names = list(models.keys())
 
     default_model_index = (
@@ -134,14 +135,16 @@ def visualize(
     default_text = (
         get_default_text(nlp) if get_default_text is not None else default_text
     )
-    text = st.text_area("Ingresa el texto para analizar:", default_text, key=f"{key}_visualize_text")
+    text = st.text_area("Ingresa el texto para analizar:",
+                        default_text, key=f"{key}_visualize_text")
     doc = process_text(spacy_model, text)
 
     if "parser" in visualizers and "parser" in active_visualizers:
         visualize_parser(doc, key=key)
     if "ner" in visualizers and "ner" in active_visualizers:
         ner_labels = ner_labels or nlp.get_pipe("ner").labels
-        visualize_ner(doc, labels=ner_labels, attrs=ner_attrs, key=key, colors={"SKILL": "#d1aaff", "OCC": "linear-gradient(90deg, #fff176, #ffee58)"})
+        visualize_ner(doc, labels=ner_labels, attrs=ner_attrs, key=key, colors={
+                      "SKILL": "#d1aaff", "OCC": "linear-gradient(90deg, #fff176, #ffee58)"})
     if "rel" in visualizers and "rel" in active_visualizers:
         ner_labels = ner_labels or nlp.get_pipe("ner").labels
         visualize_rel(doc)
@@ -230,6 +233,7 @@ def visualize_parser(
         if split_sents and len(docs) > 1:
             st.markdown(f"> {sent.text}")
         st.write(get_svg(html), unsafe_allow_html=True)
+
 
 def visualize_rel(doc: Union[spacy.tokens.Doc, List[Dict[str, str]]]):
     return 0
@@ -445,7 +449,6 @@ def visualize_tokens(
     st.dataframe(df)
 
 
-
 @st.cache_resource
 def load_model(name: str) -> spacy.language.Language:
     """Load a spaCy model."""
@@ -476,7 +479,8 @@ def get_html(html: str):
 
 LOGO_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 900 500 175" width="150" height="53"><path fill="#09A3D5" d="M64.8 970.6c-11.3-1.3-12.2-16.5-26.7-15.2-7 0-13.6 2.9-13.6 9.4 0 9.7 15 10.6 24.1 13.1 15.4 4.7 30.4 7.9 30.4 24.7 0 21.3-16.7 28.7-38.7 28.7-18.4 0-37.1-6.5-37.1-23.5 0-4.7 4.5-8.4 8.9-8.4 5.5 0 7.5 2.3 9.4 6.2 4.3 7.5 9.1 11.6 21 11.6 7.5 0 15.3-2.9 15.3-9.4 0-9.3-9.5-11.3-19.3-13.6-17.4-4.9-32.3-7.4-34-26.7-1.8-32.9 66.7-34.1 70.6-5.3-.3 5.2-5.2 8.4-10.3 8.4zm81.5-28.8c24.1 0 37.7 20.1 37.7 44.9 0 24.9-13.2 44.9-37.7 44.9-13.6 0-22.1-5.8-28.2-14.7v32.9c0 9.9-3.2 14.7-10.4 14.7-8.8 0-10.4-5.6-10.4-14.7v-95.6c0-7.8 3.3-12.6 10.4-12.6 6.7 0 10.4 5.3 10.4 12.6v2.7c6.8-8.5 14.6-15.1 28.2-15.1zm-5.7 72.8c14.1 0 20.4-13 20.4-28.2 0-14.8-6.4-28.2-20.4-28.2-14.7 0-21.5 12.1-21.5 28.2.1 15.7 6.9 28.2 21.5 28.2zm59.8-49.3c0-17.3 19.9-23.5 39.2-23.5 27.1 0 38.2 7.9 38.2 34v25.2c0 6 3.7 17.9 3.7 21.5 0 5.5-5 8.9-10.4 8.9-6 0-10.4-7-13.6-12.1-8.8 7-18.1 12.1-32.4 12.1-15.8 0-28.2-9.3-28.2-24.7 0-13.6 9.7-21.4 21.5-24.1 0 .1 37.7-8.9 37.7-9 0-11.6-4.1-16.7-16.3-16.7-10.7 0-16.2 2.9-20.4 9.4-3.4 4.9-2.9 7.8-9.4 7.8-5.1 0-9.6-3.6-9.6-8.8zm32.2 51.9c16.5 0 23.5-8.7 23.5-26.1v-3.7c-4.4 1.5-22.4 6-27.3 6.7-5.2 1-10.4 4.9-10.4 11 .2 6.7 7.1 12.1 14.2 12.1zM354 909c23.3 0 48.6 13.9 48.6 36.1 0 5.7-4.3 10.4-9.9 10.4-7.6 0-8.7-4.1-12.1-9.9-5.6-10.3-12.2-17.2-26.7-17.2-22.3-.2-32.3 19-32.3 42.8 0 24 8.3 41.3 31.4 41.3 15.3 0 23.8-8.9 28.2-20.4 1.8-5.3 4.9-10.4 11.6-10.4 5.2 0 10.4 5.3 10.4 11 0 23.5-24 39.7-48.6 39.7-27 0-42.3-11.4-50.6-30.4-4.1-9.1-6.7-18.4-6.7-31.4-.4-36.4 20.8-61.6 56.7-61.6zm133.3 32.8c6 0 9.4 3.9 9.4 9.9 0 2.4-1.9 7.3-2.7 9.9l-28.7 75.4c-6.4 16.4-11.2 27.7-32.9 27.7-10.3 0-19.3-.9-19.3-9.9 0-5.2 3.9-7.8 9.4-7.8 1 0 2.7.5 3.7.5 1.6 0 2.7.5 3.7.5 10.9 0 12.4-11.2 16.3-18.9l-27.7-68.5c-1.6-3.7-2.7-6.2-2.7-8.4 0-6 4.7-10.4 11-10.4 7 0 9.8 5.5 11.6 11.6l18.3 54.3 18.3-50.2c2.7-7.8 3-15.7 12.3-15.7z" /> </svg>"""
 
-LOGO = get_svg(LOGO_SVG, wrap=False, style="max-width: 100%; margin-bottom: 25px")
+LOGO = get_svg(LOGO_SVG, wrap=False,
+               style="max-width: 100%; margin-bottom: 25px")
 
 
 @spacy.registry.architectures("rel_model.v1")
@@ -524,7 +528,7 @@ def create_instances(max_length: int) -> Callable[[Doc], List[Tuple[Span, Span]]
 # def create_instances(max_length: int) -> Callable[[Doc], List[Tuple[Span, Span]]]:
 #     def instances_for_doc(doc: Doc) -> List[Tuple[Span, Span]]:
 #         return get_instances(max_length, doc)
-    
+
 #     return instances_for_doc
 
 
@@ -570,7 +574,8 @@ def instance_forward(model: Model[List[Doc], Floats2d], docs: List[Doc], is_trai
     relations = model.ops.reshape2f(pooled, -1, pooled.shape[1] * 2)
 
     def backprop(d_relations: Floats2d) -> List[Doc]:
-        d_pooled = model.ops.reshape2f(d_relations, d_relations.shape[0] * 2, -1)
+        d_pooled = model.ops.reshape2f(
+            d_relations, d_relations.shape[0] * 2, -1)
         d_ents = bp_pooled(d_pooled).data
         d_tokvecs = []
         ent_index = 0
@@ -580,8 +585,8 @@ def instance_forward(model: Model[List[Doc], Floats2d], docs: List[Doc], is_trai
             count_occ = model.ops.alloc2f(*shape)
             for instance in instances:
                 for ent in instance:
-                    d_tokvec[ent.start : ent.end] += d_ents[ent_index]
-                    count_occ[ent.start : ent.end] += 1
+                    d_tokvec[ent.start: ent.end] += d_ents[ent_index]
+                    count_occ[ent.start: ent.end] += 1
                     ent_index += ent.end - ent.start
             d_tokvec /= count_occ + 0.00000000001
             d_tokvecs.append(d_tokvec)
@@ -646,7 +651,8 @@ class RelationExtractor(TrainablePipe):
     def add_label(self, label: str) -> int:
         """Add a new label to the pipe."""
         if not isinstance(label, str):
-            raise ValueError("Only strings can be added as labels to the RelationExtractor")
+            raise ValueError(
+                "Only strings can be added as labels to the RelationExtractor")
         if label in self.labels:
             return 0
         self.cfg["labels"] = list(self.labels) + [label]
@@ -657,7 +663,8 @@ class RelationExtractor(TrainablePipe):
         # check that there are actually any candidate instances in this batch of examples
         total_instances = len(self.model.attrs["get_instances"](doc))
         if total_instances == 0:
-            msg.info("Could not determine any instances in doc - returning doc as is.")
+            msg.info(
+                "Could not determine any instances in doc - returning doc as is.")
             return doc
 
         predictions = self.predict([doc])
@@ -669,7 +676,8 @@ class RelationExtractor(TrainablePipe):
         get_instances = self.model.attrs["get_instances"]
         total_instances = sum([len(get_instances(doc)) for doc in docs])
         if total_instances == 0:
-            msg.info("Could not determine any instances in any docs - can not make any predictions.")
+            msg.info(
+                "Could not determine any instances in any docs - can not make any predictions.")
         scores = self.model.predict(docs)
         return self.model.ops.asarray(scores)
 
@@ -705,7 +713,8 @@ class RelationExtractor(TrainablePipe):
         # check that there are actually any candidate instances in this batch of examples
         total_instances = 0
         for eg in examples:
-            total_instances += len(self.model.attrs["get_instances"](eg.predicted))
+            total_instances += len(
+                self.model.attrs["get_instances"](eg.predicted))
         if total_instances == 0:
             msg.info("Could not determine any instances in doc.")
             return losses
@@ -763,7 +772,8 @@ class RelationExtractor(TrainablePipe):
         # check that there are actually any candidate instances in this batch of examples
         nr_instances = 0
         for eg in examples:
-            nr_instances += len(self.model.attrs["get_instances"](eg.reference))
+            nr_instances += len(self.model.attrs["get_instances"]
+                                (eg.reference))
         if nr_instances == 0:
             return None
 
@@ -771,7 +781,8 @@ class RelationExtractor(TrainablePipe):
         c = 0
         for i, eg in enumerate(examples):
             for (e1, e2) in self.model.attrs["get_instances"](eg.reference):
-                gold_label_dict = eg.reference._.rel.get((e1.start, e2.start), {})
+                gold_label_dict = eg.reference._.rel.get(
+                    (e1.start, e2.start), {})
                 for j, label in enumerate(self.labels):
                     truths[c, j] = gold_label_dict.get(label, 0)
                 c += 1
@@ -854,12 +865,14 @@ def score_relations(examples: Iterable[Example], threshold: float) -> Dict[str, 
 ########################################################################################################################
 ########################################################################################################################
 
+
 st.set_page_config(
     page_title="Applied models",
     page_icon="💻",
 )
 
 text = "The Chief Information Security Officer develops and drives the vision for the information security function. He/She acts as the authority for the development and enforcement of organisation security strategy, standards and policies, and has ultimate responsibility for ensuring the protection of corporate information. He guides the design and continuous improvement of the IT security architecture and Cyber Risk Maturity Model that balances business needs with security risks. He advises the board and top executives on all security matters and sets directions for complying with regulatory inquiries, legal and compliance regulations, inspections and audits. He is an expert in cyber security compliance standards, protocols and frameworks, as well as the Cyber Security Act 2018. He is keeps abreast of cyber-related applications and hardware technologies and services, and is constantly on the look-out for new technologies that may be leveraged on to enhance work processes, or which may pose as potential threats. The Chief Information Security Officer is an inspirational and influential leader, who displays sound judgement and decisiveness in ensuring that corporate information is well protected and secured. He is strategic in his approach toward resource management and capability development among his teams."
+
 
 def main(models: str, default_text: str):
     models = [name.strip() for name in models.split(",")]
@@ -870,17 +883,15 @@ def main(models: str, default_text: str):
     # spacy_streamlit.visualize_ner(doc,
     #                               colors={"SKILL": "#d1aaff", "OCC": "linear-gradient(90deg, #fff176, #ffee58)"})
     visualize(models,
-            default_text,
-            visualizers=visualizers,
-            show_visualizer_select=True,
-            show_logo=False,
-            sidebar_title="Skill Taxonomies Model",
-            sidebar_description="Elige uno de nuestros modelos para predecir Entidades y Relaciones.",
-            color="#d1aaff")
+              default_text,
+              visualizers=visualizers,
+              show_visualizer_select=True,
+              show_logo=False,
+              sidebar_title="Skill Taxonomies Model",
+              sidebar_description="Elige uno de nuestros modelos para predecir Entidades y Relaciones.",
+              color="#d1aaff")
 
-    
     st.title("Skill Taxonomies Model")
-    
 
 
 if __name__ == "__main__":
