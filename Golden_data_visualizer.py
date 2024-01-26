@@ -5,7 +5,7 @@ import srsly
 import typer
 
 st.set_page_config(
-    page_title="Taxonomies",
+    page_title="ShapingSkills",
     page_icon="🔊",
 )
 
