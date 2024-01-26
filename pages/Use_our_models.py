@@ -1,3 +1,4 @@
+# latest
 # import spacy_streamlit
 import typer
 import spacy
