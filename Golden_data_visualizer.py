@@ -25,6 +25,7 @@ def load_data(filepath):
         rows.append(row)
     return rows, labels, n_total_ents, n_no_ents
 
+FOOTER = """<span style="font-size: 0.65em">Luis José González</span><br><span style="font-size: 0.65em">Fernando Arana</span><br><span style="font-size: 0.65em">Sofía Hernández</span><br><span style="font-size: 0.65em">Abiel Borja</span><br><span style="font-size: 0.65em">Julieta Noguez</span><br><span style="font-size: 0.65em">Patricia Caratozzolo</span><br><span style="font-size: 0.75em">&hearts; Tec de Monterrey 2024</span>"""
 
 def main(file_paths: str):
     files = [p.strip() for p in file_paths.split(",")]
@@ -33,6 +34,7 @@ def main(file_paths: str):
         "Entity Recognizer Skill Taxonomies. "
         "View stats about the golden dataset."
     )
+    
     data_file = st.sidebar.selectbox("Golden dataset", files)
     data, labels, n_total_ents, n_no_ents = load_data(data_file)
     displacy_settings = {
@@ -59,7 +61,10 @@ def main(file_paths: str):
     """
     )
 
-
+    st.sidebar.markdown(
+        FOOTER,
+        unsafe_allow_html=True,
+    )
 
 
 if __name__ == "__main__":
