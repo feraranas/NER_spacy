@@ -54,7 +54,7 @@ TOKEN_ATTRS = ["idx", "text", "lemma_", "pos_", "tag_", "dep_", "head", "morph",
 SPAN_ATTRS = NER_ATTRS 
 
 # fmt: on
-FOOTER = """<span style="font-size: 0.75em">&hearts; Tec de Monterrey 2023</span><br><span style="font-size: 0.65em">Luis José González</span><br><span style="font-size: 0.65em">Fernando Arana</span><br><span style="font-size: 0.65em">Sofía Hernández</span><br><span style="font-size: 0.75em">Abiel Borja</span><br><span style="font-size: 0.65em">Julieta Noguez</span><br><span style="font-size: 0.65em">Patricia Caratozzolo</span>"""
+FOOTER = """<span style="font-size: 0.75em">&hearts; Tec de Monterrey 2023</span><br><span style="font-size: 0.65em">Luis José González</span><br><span style="font-size: 0.65em">Fernando Arana</span><br><span style="font-size: 0.65em">Sofía Hernández</span><br><span style="font-size: 0.65em">Abiel Borja</span><br><span style="font-size: 0.65em">Julieta Noguez</span><br><span style="font-size: 0.65em">Patricia Caratozzolo</span>"""
 
 
 def visualize(
@@ -134,7 +134,7 @@ def visualize(
     default_text = (
         get_default_text(nlp) if get_default_text is not None else default_text
     )
-    text = st.text_area("Ingresa el texto para analizar:", default_text, key=f"{key}_visualize_text")
+    text = st.text_area("Enter the text to analyze:", default_text, key=f"{key}_visualize_text")
     doc = process_text(spacy_model, text)
 
     if "parser" in visualizers and "parser" in active_visualizers:
@@ -875,11 +875,10 @@ def main(models: str, default_text: str):
             show_visualizer_select=True,
             show_logo=False,
             sidebar_title="Skill Taxonomies Model",
-            sidebar_description="Elige uno de nuestros modelos para predecir Entidades y Relaciones.",
+            sidebar_description="Use one of our models to predict entities and relationships.",
             color="#d1aaff")
 
     
-    st.title("Skill Taxonomies Model")
     
 
 
