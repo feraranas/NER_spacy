@@ -47,4 +47,4 @@ in the project directory.
 <!-- SPACY PROJECT: AUTO-GENERATED DOCS END (do not remove) -->
 
 ### Visualizer
-Visualize the proyect via streamlit: https://skill-taxonomy.streamlit.app/
+Visualize the proyect via streamlit: https://shapingskills.streamlit.app/
