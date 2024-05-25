@@ -1,4 +1,4 @@
-# 🪐 spaCy Project: Novel nlp component to do relation extraction.
+# 🪐 Novel nlp component to do relation extraction.
 
 We implement a spaCy component with a custom Machine Learning model, how to train it with and without a transformer, and how to apply it on an evaluation dataset.
 
